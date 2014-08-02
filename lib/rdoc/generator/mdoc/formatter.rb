@@ -1,15 +1,12 @@
-class RDoc::Markup::ToMdoc < RDoc::Markup::Formatter
+class Formatter < RDoc::Markup::Formatter
   def initialize(options=nil, markup = nil)
     super
+    init_attribute_manager_tags
   end
 
   def start_accepting
     @parts = []
     @list_types = []
-
-    add_tag :BOLD, "\n.Sy ", "\n"
-    add_tag :EM, "\n.Em ", "\n"
-    add_tag :TT, "\n.Li ", "\n"
   end
 
   def end_accepting
@@ -26,11 +23,13 @@ class RDoc::Markup::ToMdoc < RDoc::Markup::Formatter
   end
 
   def accept_block_quote(block_quote)
-
+    parts << ".Bd -offset indent\n"
+    block_quote.parts.each { |part| part.accept self }
+    parts << "\n.Ed\n.Pp\n"
   end
 
   def accept_blank_line(blank_line)
-
+    parts << "\n.Pp\n"
   end
 
   def accept_list_start(list)
@@ -71,16 +70,21 @@ class RDoc::Markup::ToMdoc < RDoc::Markup::Formatter
   end
 
   def accept_rule(rule)
-
   end
 
   def accept_raw(raw)
-
+    parts << raw.parts.join("\n")
   end
 
   private
 
   attr_accessor :parts, :list_types
+
+  def init_attribute_manager_tags
+    add_tag :BOLD, "\n.Sy ", "\n"
+    add_tag :EM, "\n.Em ", "\n"
+    add_tag :TT, "\n.Li ", "\n"
+  end
 
   def handle_inline_attributes(text)
     flow = attribute_manager.flow(text.dup)

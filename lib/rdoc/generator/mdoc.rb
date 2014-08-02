@@ -1,50 +1,9 @@
 require "erb"
 require "rdoc"
-require "rdoc/markup/to_mdoc"
+require "rdoc/generator/mdoc/renderable_class"
+require "rdoc/generator/mdoc/render_context"
 
 class RDoc::Generator::Mdoc
-  class RenderContext
-    def initialize(assigns)
-      assigns.each do |name, value|
-        instance_variable_set("@#{name}", value)
-      end
-    end
-
-    def binding
-      super
-    end
-  end
-
-  class RenderableClass
-    def initialize(rdoc_class)
-      @rdoc_class = rdoc_class
-    end
-
-    def name
-      rdoc_class.full_name
-    end
-
-    def description
-      formatter.convert comment
-    end
-
-    private
-
-    def formatter
-      @formatter ||= RDoc::Markup::ToMdoc.new
-    end
-
-    def comment
-      if rdoc_class.comment.is_a? String
-        rdoc_class.comment
-      else
-        rdoc_class.comment.text
-      end
-    end
-
-    attr_reader :rdoc_class
-  end
-
   def initialize(store, options)
     @store = store
     @output_directory = File.expand_path(File.join(options.op_dir, "man", "man#{section.split('-').first}"))
