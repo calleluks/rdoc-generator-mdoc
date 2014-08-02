@@ -3,6 +3,18 @@ class Document
     @markup = markup
   end
 
+  def first_paragraph
+    paragraph = rdoc_document.parts.find do |part|
+      part.is_a? RDoc::Markup::Paragraph
+    end
+
+    if paragraph
+      paragraph.text
+    else
+      ""
+    end
+  end
+
   def accept(formatter)
     rdoc_document.accept formatter
   end

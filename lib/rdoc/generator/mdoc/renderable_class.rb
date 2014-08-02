@@ -9,6 +9,10 @@ class RenderableClass
     rdoc_class.full_name
   end
 
+  def short_description
+    comment.first_paragraph
+  end
+
   def description
     comment.mdoc_formatted_content
   end

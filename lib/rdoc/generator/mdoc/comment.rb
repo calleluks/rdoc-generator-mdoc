@@ -10,6 +10,10 @@ class Comment
     document.accept formatter
   end
 
+  def first_paragraph
+    document.first_paragraph
+  end
+
   private
 
   attr_reader :document

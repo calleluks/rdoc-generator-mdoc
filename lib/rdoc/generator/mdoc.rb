@@ -41,7 +41,7 @@ class RDoc::Generator::Mdoc
       .Os
       .Sh NAME
       .Nm class <%= @class.name %>
-      .Nd
+      .Nd <%= @class.short_description %>
       .Sh DESCRIPTION
       <%= @class.description %>
     TEMPLATE
