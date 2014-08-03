@@ -11,7 +11,7 @@ module Rdoc2mdoc
     end
 
     def short_description
-      comment.first_paragraph
+      truncate(comment.first_paragraph, 50)
     end
 
     def description
@@ -31,6 +31,18 @@ module Rdoc2mdoc
 
     def comment
       @comment ||= Comment.new(markup)
+    end
+
+    def truncate(string, max_length)
+      if string.length > max_length
+        omission = "..."
+        length_with_room_for_omission = max_length - omission.length
+        stop = string.rindex(/\s/, length_with_room_for_omission) ||
+          length_with_room_for_omission
+        string[0...stop] + omission
+      else
+        string
+      end
     end
   end
 end
