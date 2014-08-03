@@ -20,10 +20,17 @@ module Rdoc2mdoc
 
     private
 
-    def comment
-      @comment ||= Comment.new(rdoc_class.comment)
+    attr_reader :rdoc_class
+
+    def markup
+      rdoc_class.
+        comment_location.
+        map { |rdoc_comment, _| rdoc_comment.text }.
+        join("\n")
     end
 
-    attr_reader :rdoc_class
+    def comment
+      @comment ||= Comment.new(markup)
+    end
   end
 end
