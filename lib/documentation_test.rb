@@ -67,4 +67,39 @@
 # <b>bold</b> <em>emphasized</em> <tt>code</tt>
 #
 class DocumentationTest
+  attr_reader :reader
+  attr_writer :writer
+  attr_accessor :readerwriter
+
+  ##
+  # This is my constant in a section without title.
+
+  CONSTANT_IN_SECTION_WITHOUT_TITLE = "No title."
+
+  # -------------------------------------------------
+  # :section: My nice section
+  #
+  # This is the section that I wrote.
+  # -------------------------------------------------
+
+  ##
+  # This is my constant.
+
+  CONSTANT = "A nice constant"
+
+  ##
+  # This is my only public method
+
+  def a_public_method(param1, param2)
+  end
+
+  private
+
+  attr_reader :private_reader
+
+  ##
+  # This is my only private method
+
+  def a_private_method(param)
+  end
 end

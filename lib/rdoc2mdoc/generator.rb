@@ -62,6 +62,24 @@ module Rdoc2mdoc # :nodoc:
         .Nd <%= @class.short_description %>
         .Sh DESCRIPTION
         <%= @class.description %>
+        <% @class.sections.each do |section| %>
+          <% if section.titled? %>
+            .Sh <%= section.title.upcase %>
+          <% end %>
+
+          <% if section.described? %>
+            <%= section.description %>
+          <% end %>
+
+          <% unless section.constants.empty? %>
+            .Bl -tag -offset indent
+            <% section.constants.each do |constant| %>
+              .It Dv <%= constant.name %> Li = <%= escape constant.value %>
+              <%= constant.description %>
+            <% end %>
+            .El
+          <% end %>
+        <% end %>
       TEMPLATE
     end
 

@@ -1,4 +1,5 @@
 require "rdoc2mdoc/comment"
+require "rdoc2mdoc/section"
 
 module Rdoc2mdoc
   class RenderableClass
@@ -16,6 +17,15 @@ module Rdoc2mdoc
 
     def description
       comment.mdoc_formatted_content
+    end
+
+    def sections
+      @sections ||=
+        rdoc_class.
+        each_section.
+        map do |rdoc_section, rdoc_constants, rdoc_attributes|
+          Section.new(rdoc_section, rdoc_constants, rdoc_attributes)
+        end
     end
 
     private
