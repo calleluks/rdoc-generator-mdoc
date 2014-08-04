@@ -1,43 +1,62 @@
 require "rdoc"
 require "rdoc2mdoc/helpers"
 
-module Rdoc2mdoc
+module Rdoc2mdoc # :nodoc:
+  ##
+  # Format an RDoc AST into mdoc.
   class Formatter < RDoc::Markup::Formatter
     include Helpers
 
+    ##
+    # Instantiate a mdoc Formatter that escapes special mdoc characters.
     def initialize(options=nil, markup = nil)
       super
       init_attribute_manager_tags
     end
 
+    ##
+    # Initialize the formatter with an empty array of parts and lists.
     def start_accepting
       @parts = []
       @list_types = []
     end
 
+    ##
+    # Compile the parts together, separated with a newline.
     def end_accepting
       parts.join.squeeze "\n"
     end
 
+    ##
+    # Turn a heading into a subsection header.
     def accept_heading(heading)
       parts << ".Ss #{heading.text}\n"
     end
 
+    ##
+    # Output a paragraph macro for the escaped paragraph.
     def accept_paragraph(paragraph)
       parts << handle_inline_attributes(paragraph.text)
       parts << "\n.Pp\n"
     end
 
+    ##
+    # Turn a large quoted section into a block display.
     def accept_block_quote(block_quote)
       parts << ".Bd -offset indent\n"
       block_quote.parts.each { |part| part.accept self }
       parts << "\n.Ed\n.Pp\n"
     end
 
+    ##
+    # Blank lines are paragraph separators.
     def accept_blank_line(blank_line)
       parts << "\n.Pp\n"
     end
 
+    ##
+    # Open an enumerated, dictionary, or bulleted list.
+    # The list must be closed using #accept_list_start.
     def accept_list_start(list)
       list_types.push(list.type)
 
@@ -51,11 +70,20 @@ module Rdoc2mdoc
       end
     end
 
+    ##
+    # Close a list.
+    # This works for all list types.
     def accept_list_end(list)
       list_types.pop
       parts << ".El\n"
     end
 
+    ##
+    # Open a list item.
+    # If the list has a label, that label is the list item.
+    # Otherwise, the list item has no content.
+    #
+    # Also see #accept_list_item_end.
     def accept_list_item_start(list_item)
       case current_list_type
       when :LABEL, :NOTE
@@ -66,18 +94,27 @@ module Rdoc2mdoc
       end
     end
 
+    ##
+    # Finish a list item.
+    # This works for all list types.
     def accept_list_item_end(list_item)
     end
 
+    ##
+    # Format code as an indented block.
     def accept_verbatim(verbatim)
       parts << ".Bd -literal -offset indent\n"
       parts << verbatim.text
       parts << "\n.Ed\n.Pp\n"
     end
 
+    ##
+    # Format a horizontal ruler.
     def accept_rule(rule)
     end
 
+    ##
+    # All raw nodes are passed through unparsed, separated by newlines.
     def accept_raw(raw)
       parts << raw.parts.join("\n")
     end
