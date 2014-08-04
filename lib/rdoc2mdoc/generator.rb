@@ -2,6 +2,7 @@ require "erb"
 require "rdoc"
 require "rdoc2mdoc/renderable_class"
 require "rdoc2mdoc/render_context"
+require "rdoc2mdoc/helpers"
 
 module Rdoc2mdoc # :nodoc:
   ##
@@ -38,7 +39,9 @@ module Rdoc2mdoc # :nodoc:
     attr_reader :store, :output_directory
 
     def renderable_classes
-      store.all_classes.select(&:display?).map { |c| RenderableClass.new(c) }
+      store.all_classes.select(&:display?).map do |klass|
+        RenderableClass.new(klass)
+      end
     end
 
     def render_class(klass)

@@ -1,7 +1,10 @@
 require "rdoc"
+require "rdoc2mdoc/helpers"
 
 module Rdoc2mdoc
   class Formatter < RDoc::Markup::Formatter
+    include Helpers
+
     def initialize(options=nil, markup = nil)
       super
       init_attribute_manager_tags
@@ -103,7 +106,7 @@ module Rdoc2mdoc
     end
 
     def convert_string(string)
-      string.strip
+      escape(string.strip)
     end
   end
 end

@@ -10,7 +10,8 @@
 # === Heading level 3
 #
 # A third paragraph. Below this comes a rule. Should be ignored by the mdoc
-# formatter.
+# formatter. (text in parenthesis) [text in brackets] "text in double quoutes"
+# 'text in single quotes'
 #
 # ---
 #
