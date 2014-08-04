@@ -87,6 +87,8 @@ class DocumentationTest
 
   CONSTANT = "A nice constant"
 
+  NOT_DOCUMENTED_CONSTANT = 42
+
   ##
   # This is my only public method
 

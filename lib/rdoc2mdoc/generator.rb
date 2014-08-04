@@ -75,7 +75,11 @@ module Rdoc2mdoc # :nodoc:
             .Bl -tag -offset indent
             <% section.constants.each do |constant| %>
               .It Dv <%= constant.name %> Li = <%= escape constant.value %>
-              <%= constant.description %>
+              <% if constant.described? %>
+                <%= constant.description %>
+              <% else %>
+                Not documented.
+              <% end %>
             <% end %>
             .El
           <% end %>

@@ -18,6 +18,10 @@ module Rdoc2mdoc
       comment.mdoc_formatted_content
     end
 
+    def described?
+      !rdoc_constant.comment.nil? && !rdoc_constant.comment.empty?
+    end
+
     private
 
     attr_reader :rdoc_constant
