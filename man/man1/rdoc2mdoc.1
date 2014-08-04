@@ -1,0 +1,69 @@
+.Dd August 4, 2014
+.Dt RDOC2MDOC 1
+.Os
+.Sh NAME
+.Nm rdoc2mdoc
+.Nd Convert Ruby rdoc into mdoc for man pages
+.
+.Sh SYNOPSIS
+.Nm rdoc2mdoc
+.Op Fl o Ar DIR
+.Op files ...
+.
+.Sh DESCRIPTION
+.Nm rdoc2mdoc
+is a tool for converting rdoc to mdoc.
+Rdoc is the format used to document Ruby projects; mdoc is the best format for
+writing man pages.
+.
+.Pp
+Given the file name of a file documented with rdoc,
+.Nm
+will generate a directory
+.Pa man/man3
+under the current directory, then place the generated mdoc under that
+directory in a file name ending with
+.Pa 3-rubygems-gem .
+.Pp
+.Nm
+supports these options:
+.
+.Bl -tag -width ".Fl o Ar DIR"
+.It Fl o Ar DIR
+make the
+.Pa man/man3
+directory under
+.Ar DIR
+instead of under the current directory.
+.It Ar files ...
+operate on
+.Ar files .
+More than one file name can be passed.
+.El
+.
+.Sh EXAMPLES
+.
+Given a file
+.Pa user.rb ,
+this will generate
+.Pa ./man/man3/user.3-rubygems-gem :
+.Pp
+.Dl rdoc2mdoc user.rb
+.Pp
+This will generate
+.Pa /usr/local/share/man/man3/user.3-rubygems-gem :
+.Pp
+.Dl rdoc2mdoc -o /usr/local/share user.rb
+.Pp
+This will generate appropriately-named man pages for all Ruby files under the
+current directory, and store these man pages under
+.Pa /usr/share/man/man3 :
+.Pp
+.Dl find . -name \\*rb -print | xargs rdoc2mdoc -o /usr/share/man/man3
+.
+.Sh SEE ALSO
+.Xr mdoc 7
+.
+.Sh AUTHORS
+.An "Calle Erlandsson" Aq calle@thoughtbot.com
+.An "thoughtbot" Aq hello@thoughtbot.com
