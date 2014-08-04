@@ -3,14 +3,28 @@ require "rdoc"
 require "rdoc2mdoc/renderable_class"
 require "rdoc2mdoc/render_context"
 
-module Rdoc2mdoc
+module Rdoc2mdoc # :nodoc:
+  ##
+  # The rdoc2mdoc generator will make the +man/man3+ directory then generate
+  # the mdoc into a file under there.
+  # The filename ends with +3-rubygems-gem+ .
+  # Each class gets its own mdoc file.
+  #
+  # This class is used by RDoc and conforms to an interface implemented there.
   class Generator
+    ##
+    # Create a Generator instance usign the provided RDoc store and parsed
+    # options.
     def initialize(store, options)
       @store = store
       @output_directory = File.expand_path(File.join(options.op_dir, "man", "man#{section.split('-').first}"))
       FileUtils.mkdir_p output_directory
     end
 
+    ##
+    # Generate the mdoc.
+    # Each class' documentation is converted to mdoc then written out to the
+    # relevant file.
     def generate
       renderable_classes.each do |klass|
         File.write File.join(output_directory, [klass.name, section].join(".")), render_class(klass)
