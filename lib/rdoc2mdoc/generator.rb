@@ -72,11 +72,26 @@ module Rdoc2mdoc # :nodoc:
           <% end %>
 
           <% unless section.constants.empty? %>
+            .Ss Constants
             .Bl -tag -offset indent
             <% section.constants.each do |constant| %>
               .It Dv <%= constant.name %> Li = <%= escape constant.value %>
               <% if constant.described? %>
                 <%= constant.description %>
+              <% else %>
+                Not documented.
+              <% end %>
+            <% end %>
+            .El
+          <% end %>
+
+          <% unless section.attributes.empty? %>
+            .Ss Attributes
+            .Bl -tag -offset indent
+            <% section.attributes.each do |attribute| %>
+              .It Va <%= attribute.name %> Pq <%= attribute.rw %>
+              <% if attribute.described? %>
+                <%= attribute.description %>
               <% else %>
                 Not documented.
               <% end %>

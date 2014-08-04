@@ -19,7 +19,7 @@ module Rdoc2mdoc
     end
 
     def described?
-      !rdoc_constant.comment.nil? && !rdoc_constant.comment.empty?
+      !description.empty?
     end
 
     private

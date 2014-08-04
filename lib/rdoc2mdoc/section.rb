@@ -1,5 +1,6 @@
 require "rdoc2mdoc/constant"
 require "rdoc2mdoc/comment"
+require "rdoc2mdoc/attribute"
 
 module Rdoc2mdoc
   class Section
@@ -18,7 +19,7 @@ module Rdoc2mdoc
     end
 
     def described?
-      !description.nil?
+      !description.empty?
     end
 
     def description
@@ -31,9 +32,15 @@ module Rdoc2mdoc
       end
     end
 
+    def attributes
+      @attributes ||= rdoc_attributes.map do |rdoc_attribute|
+        Attribute.new(rdoc_attribute)
+      end
+    end
+
     private
 
-    attr_reader :rdoc_section, :rdoc_constants
+    attr_reader :rdoc_section, :rdoc_constants, :rdoc_attributes
 
     def markup
       rdoc_section.comments.map(&:normalize).map(&:text).join
