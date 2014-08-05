@@ -1,3 +1,7 @@
+class OtherClass
+  def a_method
+  end
+end
 ##
 # = Heading level 1
 #
@@ -66,15 +70,24 @@
 #
 # <b>bold</b> <em>emphasized</em> <tt>code</tt>
 #
-class DocumentationTest
+class DocumentationTest < OtherClass
   attr_reader :reader
   attr_writer :writer
   attr_accessor :readerwriter
 
   ##
+  # This is a class method. Yey.
+  def self.a_class_method(one, two)
+  end
+
+  ##
   # This is my constant in a section without title.
 
   CONSTANT_IN_SECTION_WITHOUT_TITLE = "No title."
+
+  def a_method
+    super
+  end
 
   # -------------------------------------------------
   # :section: My nice section
@@ -90,10 +103,19 @@ class DocumentationTest
   NOT_DOCUMENTED_CONSTANT = 42
 
   ##
-  # This is my only public method
+  # This is my public method
+  #
+  # :call-seq:
+  #   test.a_public_method(alice, bob) -> nil
+  #   test.this_is_not_right(alice, bob) -> nil
+  #
 
   def a_public_method(param1, param2)
   end
+
+  ##
+  # An alias
+  alias :alias_method , :a_public_method # :doc:
 
   private
 
@@ -102,6 +124,6 @@ class DocumentationTest
   ##
   # This is my only private method
 
-  def a_private_method(param)
+  def a_private_method(param) # :doc:
   end
 end
