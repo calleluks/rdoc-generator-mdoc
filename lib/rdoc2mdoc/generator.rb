@@ -128,14 +128,6 @@ module Rdoc2mdoc # :nodoc:
                   .Pp
                 <% end %>
 
-                <% if method.has_source? %>
-                  Source:
-                  .Bd -literal -offset indent
-                  <%= method.source %>
-                  .Ed
-                  .Pp
-                <% end %>
-
                 <% if method.alias? %>
                   Alias for
                   .Xr <%= method.aliased_method.full_name %> <%= mandb_section %>
