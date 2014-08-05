@@ -1,14 +1,24 @@
 require "rdoc2mdoc/comment"
 require "rdoc2mdoc/section"
+require "rdoc2mdoc/unknown_class"
 
 module Rdoc2mdoc
   class RenderableClass
-    def initialize(rdoc_class)
+    def initialize(rdoc_class, mandb_section)
       @rdoc_class = rdoc_class
+      @mandb_section = mandb_section
     end
 
     def name
       rdoc_class.full_name
+    end
+
+    def superclass
+      if rdoc_class.superclass.is_a? String
+        UnknownClass.new(rdoc_class.superclass)
+      else
+        RenderableClass.new(rdoc_class.superclass, mandb_section)
+      end
     end
 
     def short_description
@@ -24,13 +34,22 @@ module Rdoc2mdoc
         rdoc_class.
         each_section.
         map do |rdoc_section, rdoc_constants, rdoc_attributes|
-          Section.new(rdoc_section, rdoc_constants, rdoc_attributes)
+          Section.new(
+            rdoc_section,
+            rdoc_constants,
+            rdoc_attributes,
+            mandb_section,
+          )
         end
+    end
+
+    def reference
+      "#{name} #{mandb_section}"
     end
 
     private
 
-    attr_reader :rdoc_class
+    attr_reader :rdoc_class, :mandb_section
 
     def markup
       rdoc_class.

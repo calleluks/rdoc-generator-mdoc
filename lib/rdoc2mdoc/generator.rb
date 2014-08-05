@@ -39,7 +39,7 @@ module Rdoc2mdoc # :nodoc:
 
     def renderable_classes
       store.all_classes.select(&:display?).map do |klass|
-        RenderableClass.new(klass)
+        RenderableClass.new(klass, mandb_section)
       end
     end
 
@@ -57,10 +57,13 @@ module Rdoc2mdoc # :nodoc:
         .Dt <%= @class.name.upcase %> <%= mandb_section %>
         .Os
         .Sh NAME
-        .Nm class <%= @class.name %>
+        .Nm <%= @class.name %>
         .Nd <%= @class.short_description %>
         .Sh DESCRIPTION
         <%= @class.description %>
+        .Ss Superclass
+        .Xr <%= escape @class.superclass.reference %> .
+        .Pp
         <% @class.sections.each do |section| %>
           <% if section.titled? %>
             .Sh <%= section.title.upcase %>
@@ -123,15 +126,13 @@ module Rdoc2mdoc # :nodoc:
 
                 <% if method.calls_super? %>
                   Calls superclass method
-                  .Xr <%= method.superclass_method.full_name %> <%= mandb_section %>
-                  .
+                  .Xr <%= escape method.superclass_method.reference %> .
                   .Pp
                 <% end %>
 
                 <% if method.alias? %>
                   Alias for
-                  .Xr <%= method.aliased_method.full_name %> <%= mandb_section %>
-                  .
+                  .Xr <%= escape method.aliased_method.reference %> .
                   .Pp
                 <% end %>
 
@@ -140,7 +141,7 @@ module Rdoc2mdoc # :nodoc:
                   .Bl -bullet
                   <% method.aliases.each do |_alias| %>
                     .It
-                    <%= escape _alias.full_name %> <%= escape mandb_section %>
+                    .Xr <%= escape _alias.reference %> .
                   <% end %>
                   .El
                 <% end %>

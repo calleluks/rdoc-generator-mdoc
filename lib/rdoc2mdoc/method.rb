@@ -4,8 +4,9 @@ module Rdoc2mdoc
   class Method
     attr_reader :visibility
 
-    def initialize(rdoc_method, visibility = nil)
+    def initialize(rdoc_method, mandb_section, visibility = nil)
       @rdoc_method = rdoc_method
+      @mandb_section = mandb_section
       @visibility = visibility.to_s
     end
 
@@ -47,7 +48,7 @@ module Rdoc2mdoc
 
     def superclass_method
       @superclass_method ||= rdoc_method.superclass_method &&
-        Method.new(rdoc_method.superclass_method)
+        Method.new(rdoc_method.superclass_method, mandb_section)
     end
 
     def has_source?
@@ -64,7 +65,7 @@ module Rdoc2mdoc
 
     def aliased_method
       @aliased_method ||= rdoc_method.is_alias_for &&
-        Method.new(rdoc_method.is_alias_for)
+        Method.new(rdoc_method.is_alias_for, mandb_section)
     end
 
     def aliased?
@@ -72,10 +73,18 @@ module Rdoc2mdoc
     end
 
     def aliases
-      @aliases ||= rdoc_method.aliases.map { |_alias| Method.new(_alias) }
+      @aliases ||= rdoc_method.aliases.map do |_alias|
+        Method.new(_alias, mandb_section)
+      end
+    end
+
+    def reference
+      "#{full_name} #{mandb_section}"
     end
 
     private
+
+    attr_reader :rdoc_method, :mandb_section
 
     def comment
       @comment ||= Comment.new(rdoc_method.comment.text)
@@ -90,7 +99,5 @@ module Rdoc2mdoc
     def strip_receiver(invocation_example)
       invocation_example.gsub(/^\w+\./, '')
     end
-
-    attr_reader :rdoc_method
   end
 end
