@@ -24,7 +24,7 @@ module Rdoc2mdoc # :nodoc:
     ##
     # Compile the parts together
     def end_accepting
-      parts.join
+      handle_leading_punctuation parts.join.squeeze("\n")
     end
 
     ##
@@ -144,6 +144,21 @@ module Rdoc2mdoc # :nodoc:
 
     def convert_string(string)
       escape(string.strip)
+    end
+
+    ##
+    # Return a string with all new-lines immediately followed by one of:
+    #
+    #   .,:;()[]?!
+    #
+    # immediately followed by whitespace or the end of line replaced with a
+    # space, the matched character and a space.
+    #
+    # This is to prevent lines to start with `.` and to avoid whitespace
+    # between the last word of a sentence and the following punctuation
+    # character.
+    def handle_leading_punctuation(string) # :doc:
+      string.gsub(/\n([.,:;()\[\]?!])(\s|$)/, " \\1\n")
     end
   end
 end
