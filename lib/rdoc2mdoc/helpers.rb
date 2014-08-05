@@ -22,4 +22,10 @@ module Helpers
   def escape(string)
     string.gsub(%r|[+\-/*%<>=&`'"]|, '\\\&\0')
   end
+
+  ##
+  # Returns a new string enclosed in double quotes.
+  def quote(string)
+    string.gsub(/^|$/, '"')
+  end
 end

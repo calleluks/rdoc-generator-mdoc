@@ -110,7 +110,7 @@ class DocumentationTest < OtherClass
   #   test.this_is_not_right(alice, bob) -> nil
   #
 
-  def a_public_method(param1, param2)
+  def a_public_method(param1, param2 = nil)
   end
 
   ##

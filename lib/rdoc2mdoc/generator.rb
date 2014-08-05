@@ -1,5 +1,6 @@
 require "erb"
 require "rdoc"
+require "pry"
 require "rdoc2mdoc/renderable_class"
 require "rdoc2mdoc/render_context"
 
@@ -108,7 +109,8 @@ module Rdoc2mdoc # :nodoc:
               .Ss <%= type.capitalize %> Methods
               .Bl -tag
               <% section.methods_of_type(type).each do |method| %>
-                .It Fn "<%= escape method.visibility %> <%= escape method.name %>" <%= method.parameters.join(" ") %>
+                .It Fn "<%= escape method.visibility %> <%= escape method.name %>" \
+                <%= method.parameters.map { |p| quote(escape(p)) }.join(" ") %>
 
                 <% if method.has_invocation_examples? %>
                   .Bd -literal
