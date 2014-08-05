@@ -1,7 +1,7 @@
 require "erb"
 require "rdoc"
 require "pry"
-require "rdoc2mdoc/renderable_class"
+require "rdoc2mdoc/class"
 require "rdoc2mdoc/render_context"
 
 module Rdoc2mdoc # :nodoc:
@@ -40,7 +40,7 @@ module Rdoc2mdoc # :nodoc:
 
     def renderable_classes
       store.all_classes.select(&:display?).map do |klass|
-        RenderableClass.new(klass, mandb_section)
+        Class.new(klass, mandb_section)
       end
     end
 
@@ -49,7 +49,7 @@ module Rdoc2mdoc # :nodoc:
     end
 
     def render_template(template, assigns)
-      ERB.new(template).result(binding_with_assigns(assigns))
+      ERB.new(template).result(binding_with_assigns(assigns)).squeeze("\n")
     end
 
     def class_template
@@ -62,9 +62,31 @@ module Rdoc2mdoc # :nodoc:
         .Nd <%= @class.short_description %>
         .Sh DESCRIPTION
         <%= @class.description %>
+
         .Ss Superclass
         .Xr <%= escape @class.superclass.reference %> .
         .Pp
+
+        <% unless @class.extended_modules.empty? %>
+          .Ss Extended Modules
+          .Bl -bullet -compact
+          <% @class.extended_modules.each do |_module| %>
+            .It
+            .Xr <%= escape _module.reference %>
+          <% end %>
+          .El
+        <% end %>
+
+        <% unless @class.included_modules.empty? %>
+          .Ss Included Modules
+          .Bl -bullet -compact
+          <% @class.included_modules.each do |_module| %>
+            .It
+            .Xr <%= escape _module.reference %>
+          <% end %>
+          .El
+        <% end %>
+
         <% @class.sections.each do |section| %>
           <% if section.titled? %>
             .Sh <%= section.title.upcase %>
@@ -109,8 +131,8 @@ module Rdoc2mdoc # :nodoc:
               .Ss <%= type.capitalize %> Methods
               .Bl -tag
               <% section.methods_of_type(type).each do |method| %>
-                .It Fn "<%= escape method.visibility %> <%= escape method.name %>" \
-                <%= method.parameters.map { |p| quote(escape(p)) }.join(" ") %>
+                .It Fn "<%= escape method.visibility %> <%= escape method.name %>" <%=
+                method.parameters.map { |p| quote(escape(p)) }.join(" ") %>
 
                 <% if method.has_invocation_examples? %>
                   .Bd -literal
@@ -140,10 +162,10 @@ module Rdoc2mdoc # :nodoc:
 
                 <% if method.aliased? %>
                   Also aliased as:
-                  .Bl -bullet
+                  .Bl -bullet -compact
                   <% method.aliases.each do |_alias| %>
                     .It
-                    .Xr <%= escape _alias.reference %> .
+                    .Xr <%= escape _alias.reference %>
                   <% end %>
                   .El
                 <% end %>

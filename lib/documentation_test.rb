@@ -1,3 +1,9 @@
+module ModuleToExtend
+end
+
+module ModuleToInclude
+end
+
 class OtherClass
   def a_method
   end
@@ -71,6 +77,9 @@ end
 # <b>bold</b> <em>emphasized</em> <tt>code</tt>
 #
 class DocumentationTest < OtherClass
+  extend ModuleToExtend
+  include ModuleToInclude
+
   attr_reader :reader
   attr_writer :writer
   attr_accessor :readerwriter

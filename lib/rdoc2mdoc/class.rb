@@ -1,9 +1,11 @@
 require "rdoc2mdoc/comment"
 require "rdoc2mdoc/section"
 require "rdoc2mdoc/unknown_class"
+require "rdoc2mdoc/module"
+require "rdoc2mdoc/unknown_module"
 
 module Rdoc2mdoc
-  class RenderableClass
+  class Class
     def initialize(rdoc_class, mandb_section)
       @rdoc_class = rdoc_class
       @mandb_section = mandb_section
@@ -17,7 +19,7 @@ module Rdoc2mdoc
       if rdoc_class.superclass.is_a? String
         UnknownClass.new(rdoc_class.superclass)
       else
-        RenderableClass.new(rdoc_class.superclass, mandb_section)
+        Class.new(rdoc_class.superclass, mandb_section)
       end
     end
 
@@ -41,6 +43,14 @@ module Rdoc2mdoc
             mandb_section,
           )
         end
+    end
+
+    def extended_modules
+      @extended_modules ||= decorate_rdoc_mixins(rdoc_class.extends)
+    end
+
+    def included_modules
+      @included_modules ||= decorate_rdoc_mixins(rdoc_class.includes)
     end
 
     def reference
@@ -72,6 +82,17 @@ module Rdoc2mdoc
       else
         string
       end
+    end
+
+    def decorate_rdoc_mixins(rdoc_mixins)
+      rdoc_mixins.map(&:module).map do |rdoc_module|
+        if rdoc_module.is_a? String
+          UnknownModule.new(rdoc_module)
+        else
+          Module.new(rdoc_module, mandb_section)
+        end
+      end
+
     end
   end
 end

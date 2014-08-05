@@ -22,9 +22,9 @@ module Rdoc2mdoc # :nodoc:
     end
 
     ##
-    # Compile the parts together, separated with a newline.
+    # Compile the parts together
     def end_accepting
-      parts.join.squeeze "\n"
+      parts.join
     end
 
     ##
