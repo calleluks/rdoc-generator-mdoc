@@ -1,0 +1,48 @@
+.Dd <%= Time.now.strftime "%B %-d, %Y" %>
+.Dt <%= @method.full_name.upcase %> <%= @method.mandb_section %>
+.Os
+.Sh NAME
+.Nm <%= @method.full_name %>
+.Nd <%= @method.short_description %>
+<% if @method.has_invocation_examples? %>
+.Sh SYNPOSIS
+.Bd -literal
+<%= @method.invocation_examples.join("\n") %>
+.Ed
+.Pp
+<% end %>
+.Sh DESCRIPTION
+<% if @method.described? %>
+<%= @method.description %>
+<% else %>
+Not documented.
+.Pp
+<% end %>
+<% if @method.calls_super? %>
+.Ss Calls superclass method
+.Xr <%= escape @method.superclass_method.reference %>
+.Pp
+<% end %>
+<% if @method.alias? %>
+.Ss Alias for
+.Xr <%= escape @method.aliased_method.reference %>
+.Pp
+<% end %>
+<% if @method.aliased? %>
+.Ss Also aliased as
+.Bl -bullet -compact
+<% @method.aliases.each do |_alias| %>
+.It
+.Xr <%= escape _alias.reference %>
+<% end %>
+.El
+<% end %>
+<% if @method.has_source? %>
+.Sh SOURCE
+.Bd -literal
+<%= @method.source %>
+.Ed
+.Pp
+<% end %>
+.Sh SEE ALSO
+.Xr <%= @method.object.reference %>

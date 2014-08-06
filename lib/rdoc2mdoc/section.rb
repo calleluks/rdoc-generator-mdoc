@@ -5,6 +5,10 @@ require "rdoc2mdoc/method"
 
 module Rdoc2mdoc
   class Section
+    def self.method_types
+      [:class, :instance]
+    end
+
     def initialize(rdoc_section, rdoc_constants, rdoc_attributes, mandb_section)
       @rdoc_section = rdoc_section
       @rdoc_constants = rdoc_constants
@@ -38,6 +42,10 @@ module Rdoc2mdoc
       @attributes ||= rdoc_attributes.map do |rdoc_attribute|
         Attribute.new(rdoc_attribute)
       end
+    end
+
+    def methods
+      self.class.method_types.flat_map { |type| methods_of_type(type) }
     end
 
     def methods_of_type(type)

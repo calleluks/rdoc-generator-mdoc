@@ -28,7 +28,8 @@ module Rdoc2mdoc # :nodoc:
     # Each class's and module's documentation is converted to mdoc then written
     # out to the relevant file.
     def generate
-      (classes + modules).each { |object| generate_module(object) }
+      generate_class_and_module_pages
+      generate_method_pages
     end
 
     RDoc::RDoc.add_generator self
@@ -37,12 +38,28 @@ module Rdoc2mdoc # :nodoc:
 
     attr_reader :store, :output_directory
 
+    def generate_class_and_module_pages
+      (classes + modules).each do |object|
+        generate_page(file_name(object), "module", module: object)
+      end
+    end
+
+    def generate_method_pages
+      methods.each do |method|
+        generate_page(file_name(method), "method", method: method)
+      end
+    end
+
     def classes
-      decorate_displayed(store.all_classes, Class)
+      @classes ||= decorate_displayed(store.all_classes, Class)
     end
 
     def modules
-      decorate_displayed(store.all_modules, Module)
+      @modules ||= decorate_displayed(store.all_modules, Module)
+    end
+
+    def methods
+      @methods ||= (classes + modules).flat_map(&:methods)
     end
 
     def decorate_displayed(objects, decoration_class)
@@ -51,29 +68,26 @@ module Rdoc2mdoc # :nodoc:
       end
     end
 
-    def generate_module(_module)
-      write(_module, render_template(module_template, module: _module))
+    def generate_page(file_name, template_name, assigns)
+      File.write(file_name, render_template(template(template_name), assigns))
+    end
+
+    def file_name(object)
+      File.join(output_directory, "#{object.full_name}.#{mandb_section}")
     end
 
     def render_template(template, assigns)
       ERB.new(template).result(binding_with_assigns(assigns)).squeeze("\n")
     end
 
-    def write(object, mdoc)
-      File.write file_name(object), mdoc
+    def template(name)
+      @templates ||= {}
+      @templates[name] ||= File.read(template_path(name))
     end
 
-    def file_name(object)
-      File.join(output_directory, "#{object.name}.#{mandb_section}")
-    end
-
-    def module_template
-      @module_template ||= File.read(template_path("module"))
-    end
-
-    def template_path(template_name)
+    def template_path(name)
       File.expand_path(
-        File.join("..", "..", "templates", "#{template_name}.mdoc.erb"),
+        File.join("..", "..", "templates", "#{name}.mdoc.erb"),
         File.basename(__FILE__)
       )
     end

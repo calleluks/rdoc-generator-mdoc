@@ -1,3 +1,4 @@
+require "active_support/core_ext/string/filters"
 require "rdoc2mdoc/comment"
 require "rdoc2mdoc/section"
 require "rdoc2mdoc/unknown_module"
@@ -11,16 +12,20 @@ module Rdoc2mdoc
       @mandb_section = mandb_section
     end
 
-    def name
+    def full_name
       rdoc_module.full_name
     end
 
     def reference
-      "#{name} #{mandb_section}"
+      "#{full_name} #{mandb_section}"
     end
 
     def short_description
-      truncate(comment.first_paragraph, 50)
+      comment.first_paragraph.truncate(50)
+    end
+
+    def described?
+      !description.empty?
     end
 
     def description
@@ -33,6 +38,10 @@ module Rdoc2mdoc
 
     def included_modules
       @included_modules ||= decorate_rdoc_mixins(rdoc_module.includes)
+    end
+
+    def methods
+      sections.flat_map(&:methods)
     end
 
     def sections
@@ -50,18 +59,6 @@ module Rdoc2mdoc
     end
 
     private
-
-    def truncate(string, max_length)
-      if string.length > max_length
-        omission = "..."
-        length_with_room_for_omission = max_length - omission.length
-        stop = string.rindex(/\s/, length_with_room_for_omission) ||
-          length_with_room_for_omission
-        string[0...stop] + omission
-      else
-        string
-      end
-    end
 
     def comment
       @comment ||= Comment.new(markup)

@@ -1,8 +1,9 @@
+require "active_support/core_ext/string/filters"
 require "rdoc2mdoc/comment"
 
 module Rdoc2mdoc
   class Method
-    attr_reader :visibility
+    attr_reader :visibility, :mandb_section
 
     def initialize(rdoc_method, mandb_section, visibility = nil)
       @rdoc_method = rdoc_method
@@ -15,11 +16,19 @@ module Rdoc2mdoc
     end
 
     def full_name
-      rdoc_method.full_name
+      @full_name ||= if class_method?
+        replace_last_double_colon_with_dot(rdoc_method.full_name)
+      else
+        rdoc_method.full_name
+      end
     end
 
     def parameters
       rdoc_method.params.gsub(/[\(\)]/, '').split(", ")
+    end
+
+    def short_description
+      comment.first_paragraph.truncate(50)
     end
 
     def described?
@@ -48,7 +57,7 @@ module Rdoc2mdoc
 
     def superclass_method
       @superclass_method ||= rdoc_method.superclass_method &&
-        Method.new(rdoc_method.superclass_method, mandb_section)
+        self.class.new(rdoc_method.superclass_method, mandb_section)
     end
 
     def has_source?
@@ -56,7 +65,8 @@ module Rdoc2mdoc
     end
 
     def source
-      @source ||= rdoc_method.token_stream && rdoc_method.tokens_to_s
+      @source ||= rdoc_method.token_stream &&
+        strip_source_file_path(rdoc_method.tokens_to_s)
     end
 
     def alias?
@@ -65,7 +75,7 @@ module Rdoc2mdoc
 
     def aliased_method
       @aliased_method ||= rdoc_method.is_alias_for &&
-        Method.new(rdoc_method.is_alias_for, mandb_section)
+        self.class.new(rdoc_method.is_alias_for, mandb_section)
     end
 
     def aliased?
@@ -74,7 +84,7 @@ module Rdoc2mdoc
 
     def aliases
       @aliases ||= rdoc_method.aliases.map do |_alias|
-        Method.new(_alias, mandb_section)
+        self.class.new(_alias, mandb_section)
       end
     end
 
@@ -82,9 +92,21 @@ module Rdoc2mdoc
       "#{full_name} #{mandb_section}"
     end
 
+    def object
+      @object ||= Module.new(rdoc_method.parent, mandb_section)
+    end
+
     private
 
-    attr_reader :rdoc_method, :mandb_section
+    attr_reader :rdoc_method
+
+    def class_method?
+      rdoc_method.singleton
+    end
+
+    def replace_last_double_colon_with_dot(string)
+      string.sub(/(.*)::(.*)/, "\\1.\\2")
+    end
 
     def comment
       @comment ||= Comment.new(rdoc_method.comment.text)
@@ -98,6 +120,10 @@ module Rdoc2mdoc
 
     def strip_receiver(invocation_example)
       invocation_example.gsub(/^\w+\./, '')
+    end
+
+    def strip_source_file_path(source)
+      source.lines[1..-1].join
     end
   end
 end
