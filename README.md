@@ -1,27 +1,36 @@
-rdoc2mdoc
+rdoc_mdoc
 =========
 
-An rdoc to mdoc converter. Turn Ruby into man pages.
+An mdoc(7) generator for [RDoc](https://github.com/rdoc/rdoc).
 
 Usage
 -----
 
-Given a file `user.rb`, this will generate `./man/man3/user.3-rubygems-gem`:
+### In Your Ruby Source Code
 
-    rdoc2mdoc user.rb
+Add `rdoc_mdoc` to your `Gemfile`:
 
-This will generate `/usr/local/share/man/man3/user.3-rubygems-gem`:
+    gem "rdoc_mdoc"
 
-    rdoc2mdoc -o /usr/local/share user.rb
+Specify `mdoc` as the formatter using the `-f` option when calling
+`RDoc::RDoc#new`:
 
-This will generate appropriately-named man pages for all Ruby files under the
-current directory, and store these man pages under `/usr/share/man/man3`:
+    require "rdoc_mdoc"
 
-    find . -name \*rb -print | xargs rdoc2mdoc -o /usr/share/man/man3
+    RDoc::RDoc.new.document "-f mdoc"
 
-Copright
--------
+For more information on using the `RDoc::RDoc` class see [the official RDoc
+documentation](http://docs.seattlerb.org/rdoc/).
 
-Copyright 2014 thoughtbot.
+### Using the `rdoc` executable
 
-Lead by Calle Erlandsson and thoughtbot.
+Specify `mdoc` as the formatter using the `-f` option:
+
+    $ rdoc -f mdoc
+
+Copyright
+---------
+
+Copyright (c) 2014 Calle Erlandsson & thoughtbot, Inc.
+
+Lead by Calle Erlandsson & thoughtbot, Inc.
