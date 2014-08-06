@@ -1,0 +1,109 @@
+.Dd <%= Time.now.strftime "%B %-d, %Y" %>
+.Dt <%= @module.name.upcase %> <%= @module.mandb_section %>
+.Os
+.Sh NAME
+.Nm <%= @module.name %>
+.Nd <%= @module.short_description %>
+.Sh DESCRIPTION
+<%= @module.description %>
+<% if @module.respond_to?(:superclass) %>
+.Ss Superclass
+.Xr <%= escape @module.superclass.reference %> .
+.Pp
+<% end %>
+<% unless @module.extended_modules.empty? %>
+.Ss Extended Modules
+.Bl -bullet -compact
+<% @module.extended_modules.each do |_module| %>
+.It
+.Xr <%= escape _module.reference %>
+<% end %>
+.El
+<% end %>
+<% unless @module.included_modules.empty? %>
+.Ss Included Modules
+.Bl -bullet -compact
+<% @module.included_modules.each do |_module| %>
+.It
+.Xr <%= escape _module.reference %>
+<% end %>
+.El
+<% end %>
+<% @module.sections.each do |section| %>
+<% if section.titled? %>
+.Sh <%= section.title.upcase %>
+<% end %>
+<% if section.described? %>
+<%= section.description %>
+<% end %>
+<% unless section.constants.empty? %>
+.Ss Constants
+.Bl -tag
+<% section.constants.each do |constant| %>
+.It Dv <%= constant.name %> Li = <%= escape constant.value %>
+<% if constant.described? %>
+<%= constant.description %>
+<% else %>
+Not documented.
+.Pp
+<% end %>
+<% end %>
+.El
+<% end %>
+<% unless section.attributes.empty? %>
+.Ss Attributes
+.Bl -tag
+<% section.attributes.each do |attribute| %>
+.It Va <%= attribute.name %> Pq <%= attribute.rw %>
+<% if attribute.described? %>
+<%= attribute.description %>
+<% else %>
+Not documented.
+.Pp
+<% end %>
+<% end %>
+.El
+<% end %>
+<% [:class, :instance].each do |type| %>
+<% unless section.methods_of_type(type).empty? %>
+.Ss <%= type.capitalize %> Methods
+.Bl -tag
+<% section.methods_of_type(type).each do |method| %>
+.It Fn "<%= escape method.visibility %> <%= escape method.name %>" <%=
+method.parameters.map { |p| quote(escape(p)) }.join(" ") %>
+<% if method.has_invocation_examples? %>
+.Bd -literal
+<%= method.invocation_examples.join("\\n") %>
+.Ed
+.Pp
+<% end %>
+<% if method.described? %>
+<%= method.description %>
+<% else %>
+Not documented.
+.Pp
+<% end %>
+<% if method.calls_super? %>
+Calls superclass method
+.Xr <%= escape method.superclass_method.reference %> .
+.Pp
+<% end %>
+<% if method.alias? %>
+Alias for
+.Xr <%= escape method.aliased_method.reference %> .
+.Pp
+<% end %>
+<% if method.aliased? %>
+Also aliased as:
+.Bl -bullet -compact
+<% method.aliases.each do |_alias| %>
+.It
+.Xr <%= escape _alias.reference %>
+<% end %>
+.El
+<% end %>
+<% end %>
+.El
+<% end %>
+<% end %>
+<% end %>
