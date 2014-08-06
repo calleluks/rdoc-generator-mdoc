@@ -2,6 +2,7 @@ require "erb"
 require "rdoc"
 require "pry"
 require "rdoc2mdoc/class"
+require "rdoc2mdoc/module"
 require "rdoc2mdoc/render_context"
 
 module Rdoc2mdoc # :nodoc:
@@ -24,12 +25,10 @@ module Rdoc2mdoc # :nodoc:
 
     ##
     # Generate the mdoc.
-    # Each class' documentation is converted to mdoc then written out to the
-    # relevant file.
+    # Each class's and module's documentation is converted to mdoc then written
+    # out to the relevant file.
     def generate
-      renderable_classes.each do |klass|
-        File.write File.join(output_directory, [klass.name, mandb_section].join(".")), render_class(klass)
-      end
+      (classes + modules).each { |object| generate_module(object) }
     end
 
     RDoc::RDoc.add_generator self
@@ -38,56 +37,74 @@ module Rdoc2mdoc # :nodoc:
 
     attr_reader :store, :output_directory
 
-    def renderable_classes
-      store.all_classes.select(&:display?).map do |klass|
-        Class.new(klass, mandb_section)
+    def classes
+      decorate_displayed(store.all_classes, Class)
+    end
+
+    def modules
+      decorate_displayed(store.all_modules, Module)
+    end
+
+    def decorate_displayed(objects, decoration_class)
+      objects.select(&:display?).map do |object|
+        decoration_class.new(object, mandb_section)
       end
     end
 
-    def render_class(klass)
-      render_template class_template, class: klass
+    def generate_module(_module)
+      write(_module, render_template(module_template, module: _module))
     end
 
     def render_template(template, assigns)
       ERB.new(template).result(binding_with_assigns(assigns)).squeeze("\n")
     end
 
-    def class_template
+    def write(object, mdoc)
+      File.write file_name(object), mdoc
+    end
+
+    def file_name(object)
+      File.join(output_directory, "#{object.name}.#{mandb_section}")
+    end
+
+    def module_template
       <<-TEMPLATE.gsub(/^\s*/, '')
         .Dd <%= Time.now.strftime "%B %-d, %Y" %>
-        .Dt <%= @class.name.upcase %> <%= mandb_section %>
+        .Dt <%= @module.name.upcase %> <%= @module.mandb_section %>
         .Os
         .Sh NAME
-        .Nm <%= @class.name %>
-        .Nd <%= @class.short_description %>
+        .Nm <%= @module.name %>
+        .Nd <%= @module.short_description %>
         .Sh DESCRIPTION
-        <%= @class.description %>
+        <%= @module.description %>
 
+        <% if @module.respond_to?(:superclass) %>
         .Ss Superclass
-        .Xr <%= escape @class.superclass.reference %> .
+        .Xr <%= escape @module.superclass.reference %> .
         .Pp
+        <% end %>
 
-        <% unless @class.extended_modules.empty? %>
+        <% unless @module.extended_modules.empty? %>
           .Ss Extended Modules
           .Bl -bullet -compact
-          <% @class.extended_modules.each do |_module| %>
+          <% @module.extended_modules.each do |_module| %>
             .It
             .Xr <%= escape _module.reference %>
           <% end %>
           .El
         <% end %>
 
-        <% unless @class.included_modules.empty? %>
+        <% unless @module.included_modules.empty? %>
           .Ss Included Modules
           .Bl -bullet -compact
-          <% @class.included_modules.each do |_module| %>
+          <% @module.included_modules.each do |_module| %>
             .It
             .Xr <%= escape _module.reference %>
           <% end %>
           .El
         <% end %>
 
-        <% @class.sections.each do |section| %>
+        <% @module.sections.each do |section| %>
           <% if section.titled? %>
             .Sh <%= section.title.upcase %>
           <% end %>
@@ -179,7 +196,7 @@ module Rdoc2mdoc # :nodoc:
     end
 
     def binding_with_assigns(assigns)
-      RenderContext.new(assigns, mandb_section).binding
+      RenderContext.new(assigns).binding
     end
 
     def mandb_section

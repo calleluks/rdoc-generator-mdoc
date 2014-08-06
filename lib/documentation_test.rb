@@ -136,3 +136,21 @@ class DocumentationTest < OtherClass
   def a_private_method(param) # :doc:
   end
 end
+
+##
+# A module I wrote.
+#
+# Second paragraph.
+module TestModule
+  include ModuleToInclude
+  extend ModuleToExtend
+
+  CONSTANT = "This is a constant"
+  FINAL_ANSWER = 42
+
+  def an_instance_method
+  end
+
+  def self.a_class_method
+  end
+end
