@@ -1,7 +1,7 @@
 require "active_support/core_ext/string/filters"
-require "rdoc2mdoc/comment"
+require "rdoc_mdoc/comment"
 
-module Rdoc2mdoc
+module RdocMdoc
   class Method
     attr_reader :visibility, :mandb_section
 

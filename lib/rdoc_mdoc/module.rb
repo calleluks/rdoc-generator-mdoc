@@ -1,9 +1,9 @@
 require "active_support/core_ext/string/filters"
-require "rdoc2mdoc/comment"
-require "rdoc2mdoc/section"
-require "rdoc2mdoc/unknown_module"
+require "rdoc_mdoc/comment"
+require "rdoc_mdoc/section"
+require "rdoc_mdoc/unknown_module"
 
-module Rdoc2mdoc
+module RdocMdoc
   class Module
     attr_reader :mandb_section
 
@@ -72,9 +72,6 @@ module Rdoc2mdoc
     end
 
     def decorate_rdoc_mixins(rdoc_mixins)
-      require "rdoc2mdoc/unknown_module"
-      require "rdoc2mdoc/module"
-
       rdoc_mixins.map(&:module).map do |rdoc_module|
         if rdoc_module.is_a? String
           UnknownModule.new(rdoc_module)

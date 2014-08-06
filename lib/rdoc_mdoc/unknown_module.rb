@@ -1,4 +1,4 @@
-module Rdoc2mdoc
+module RdocMdoc
   class UnknownModule
     def initialize(full_name)
       @full_name = full_name

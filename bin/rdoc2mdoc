@@ -2,6 +2,6 @@
 
 $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
 
-require 'rdoc2mdoc/cli'
+require 'rdoc_mdoc/cli'
 
-Rdoc2mdoc::CLI.new.run ARGV
+RdocMdoc::CLI.new.run ARGV

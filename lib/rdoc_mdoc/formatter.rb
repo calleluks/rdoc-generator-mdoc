@@ -1,7 +1,7 @@
 require "rdoc"
-require "rdoc2mdoc/helpers"
+require "rdoc_mdoc/helpers"
 
-module Rdoc2mdoc # :nodoc:
+module RdocMdoc # :nodoc:
   ##
   # Format an RDoc AST into mdoc.
   class Formatter < RDoc::Markup::Formatter

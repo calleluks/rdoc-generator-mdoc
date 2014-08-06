@@ -1,11 +1,10 @@
 require "erb"
 require "rdoc"
-require "pry"
-require "rdoc2mdoc/class"
-require "rdoc2mdoc/module"
-require "rdoc2mdoc/render_context"
+require "rdoc_mdoc/class"
+require "rdoc_mdoc/module"
+require "rdoc_mdoc/render_context"
 
-module Rdoc2mdoc # :nodoc:
+module RdocMdoc # :nodoc:
   ##
   # The rdoc2mdoc generator will make the +man/man3+ directory then generate
   # the mdoc into a file under there.

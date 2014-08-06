@@ -1,7 +1,7 @@
-require 'rdoc'
-require 'rdoc2mdoc/generator'
+require "rdoc"
+require "rdoc_mdoc/generator"
 
-module Rdoc2mdoc
+module RdocMdoc
   ##
   # The command-line interface for rdoc2mdoc.
   class CLI
@@ -10,7 +10,8 @@ module Rdoc2mdoc
     def run(argv)
       options = RDoc::Options.new
       options.files = argv
-      options.setup_generator "rdoc2mdoc::generator"
+      p options
+      options.setup_generator "rdocmdoc::generator"
       RDoc::RDoc.new.document options
     end
   end
