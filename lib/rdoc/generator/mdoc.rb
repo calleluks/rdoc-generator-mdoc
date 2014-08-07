@@ -5,16 +5,29 @@ require "rdoc/generator/mdoc/class"
 require "rdoc/generator/mdoc/module"
 require "rdoc/generator/mdoc/render_context"
 
+class RDoc::Options
+  attr_accessor :mandb_section
+end
+
 ##
 # An mdoc(7) generator for RDoc.
 #
 # This generator will create man pages in mdoc(7) format for classes, modules
 # and methods parsed by RDoc.
 class RDoc::Generator::Mdoc
+  RDoc::RDoc.add_generator self
+
+  def self.setup_options(options)
+    options.option_parser.on("--section SECTION", String) do |mandb_section|
+      options.mandb_section = mandb_section
+    end
+  end
+
   ##
   # Create an instance usign the provided RDoc::Store and RDoc::Options.
   def initialize(store, options)
     @store = store
+    @mandb_section = options.mandb_section || "3-rdoc"
     @output_directory = File.expand_path(File.join(options.op_dir, "man", "man#{mandb_section.split('-').first}"))
     FileUtils.mkdir_p output_directory
   end
@@ -23,17 +36,15 @@ class RDoc::Generator::Mdoc
   # Generate man pages.
   #
   # Every class, module and method gets their own man page in the
-  # "man/manSECTION" subdirectory of the output directory.
+  # "man/manSECTION_PREFIX" subdirectory of the output directory.
   def generate
     generate_class_and_module_pages
     generate_method_pages
   end
 
-  RDoc::RDoc.add_generator self
-
   private
 
-  attr_reader :store, :output_directory
+  attr_reader :store, :output_directory, :mandb_section
 
   def generate_class_and_module_pages
     (classes + modules).each do |object|
@@ -91,9 +102,5 @@ class RDoc::Generator::Mdoc
 
   def binding_with_assigns(assigns)
     RenderContext.new(assigns).binding
-  end
-
-  def mandb_section
-    "3-rubygems-gem"
   end
 end

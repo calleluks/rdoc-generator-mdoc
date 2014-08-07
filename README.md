@@ -19,6 +19,12 @@ Specify `mdoc` as the formatter using the `-f` option when calling
 
     RDoc::RDoc.new.document "-f mdoc"
 
+By default, the mdoc generator will put the generated man pages in section
+`3-rdoc`. If you want the man pages to be put in a different section, specify
+the section using the `--section` option:
+
+    RDoc::RDoc.new.document "-f mdoc --section 3-my-section"
+
 For more information on using the `RDoc::RDoc` class see [the official RDoc
 documentation](http://docs.seattlerb.org/rdoc/).
 
@@ -27,6 +33,12 @@ documentation](http://docs.seattlerb.org/rdoc/).
 Specify `mdoc` as the formatter using the `-f` option:
 
     $ rdoc -f mdoc
+
+By default, the mdoc generator will put the generated man pages in section
+`3-rdoc`. If you want the man pages to be put in a different section, specify
+the section using the `--section` option:
+
+    $ rdoc -f mdoc --section 3-my-section
 
 Copyright
 ---------
