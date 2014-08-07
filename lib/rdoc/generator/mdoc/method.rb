@@ -1,7 +1,7 @@
 require "active_support/core_ext/string/filters"
-require "rdoc_mdoc/comment"
+require "rdoc/generator/mdoc/comment"
 
-module RdocMdoc
+class RDoc::Generator::Mdoc
   class Method
     attr_reader :visibility, :mandb_section
 

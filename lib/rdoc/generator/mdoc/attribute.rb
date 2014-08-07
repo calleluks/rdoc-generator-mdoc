@@ -1,6 +1,6 @@
-require "rdoc_mdoc/comment"
+require "rdoc/generator/mdoc/comment"
 
-module RdocMdoc
+class RDoc::Generator::Mdoc
   class Attribute
     def initialize(rdoc_attribute)
       @rdoc_attribute = rdoc_attribute

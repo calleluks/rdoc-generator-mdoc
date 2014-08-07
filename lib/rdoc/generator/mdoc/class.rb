@@ -1,7 +1,7 @@
-require "rdoc_mdoc/unknown_class"
-require "rdoc_mdoc/module"
+require "rdoc/generator/mdoc/unknown_class"
+require "rdoc/generator/mdoc/module"
 
-module RdocMdoc
+class RDoc::Generator::Mdoc
   class Class < Module
     def superclass
       if rdoc_class.superclass.is_a? String

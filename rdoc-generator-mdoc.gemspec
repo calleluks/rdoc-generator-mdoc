@@ -1,14 +1,14 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "rdoc_mdoc/version"
+require "rdoc/generator/mdoc/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "rdoc_mdoc"
-  spec.version = RdocMdoc::VERSION
+  spec.name = "rdoc-generator-mdoc"
+  spec.version = RDoc::Generator::Mdoc::VERSION
   spec.authors = ["Calle Erlandsson", "Mike Burns"]
   spec.email = ["calle@thoughtbot.com", "hello@thoughtbot.com"]
   spec.summary = "An mdoc(7) generator for RDoc"
-  spec.homepage = "https://github.com/thoughtbot/rdoc_mdoc"
+  spec.homepage = "https://github.com/thoughtbot/rdoc-generator-mdoc"
   spec.license = "MIT"
   spec.files = `git ls-files -z`.split("\x0")
   spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }

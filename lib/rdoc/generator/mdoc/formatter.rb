@@ -1,14 +1,14 @@
 require "rdoc"
-require "rdoc_mdoc/helpers"
+require "rdoc/generator/mdoc/helpers"
 
-module RdocMdoc # :nodoc:
+class RDoc::Generator::Mdoc
   ##
-  # Format an RDoc AST into mdoc.
+  # Format an RDoc::Document into mdoc.
   class Formatter < RDoc::Markup::Formatter
     include Helpers
 
     ##
-    # Instantiate a mdoc Formatter that escapes special mdoc characters.
+    # Instantiate a mdoc formatter that escapes special mdoc characters.
     def initialize(options=nil, markup = nil)
       super
       init_attribute_manager_tags
@@ -22,7 +22,7 @@ module RdocMdoc # :nodoc:
     end
 
     ##
-    # Compile the parts together
+    # Compile the parts together.
     def end_accepting
       handle_leading_punctuation parts.join.squeeze("\n")
     end
@@ -49,13 +49,14 @@ module RdocMdoc # :nodoc:
     end
 
     ##
-    # Blank lines are paragraph separators.
+    # Output paragraph macros for blank lines.
     def accept_blank_line(blank_line)
       parts << "\n.Pp\n"
     end
 
     ##
     # Open an enumerated, dictionary, or bulleted list.
+    #
     # The list must be closed using #accept_list_start.
     def accept_list_start(list)
       list_types.push(list.type)
@@ -72,6 +73,7 @@ module RdocMdoc # :nodoc:
 
     ##
     # Close a list.
+    #
     # This works for all list types.
     def accept_list_end(list)
       list_types.pop
@@ -80,8 +82,9 @@ module RdocMdoc # :nodoc:
 
     ##
     # Open a list item.
-    # If the list has a label, that label is the list item.
-    # Otherwise, the list item has no content.
+    #
+    # If the list has a label, that label is the list item. Otherwise, the
+    # list item has no content.
     #
     # Also see #accept_list_item_end.
     def accept_list_item_start(list_item)
@@ -96,6 +99,7 @@ module RdocMdoc # :nodoc:
 
     ##
     # Finish a list item.
+    #
     # This works for all list types.
     def accept_list_item_end(list_item)
     end
@@ -110,11 +114,13 @@ module RdocMdoc # :nodoc:
 
     ##
     # Format a horizontal ruler.
+    #
+    # This is a no-op.
     def accept_rule(rule)
     end
 
     ##
-    # All raw nodes are passed through unparsed, separated by newlines.
+    # Pass through all raw parts unparsed, separated by newlines.
     def accept_raw(raw)
       parts << raw.parts.join("\n")
     end

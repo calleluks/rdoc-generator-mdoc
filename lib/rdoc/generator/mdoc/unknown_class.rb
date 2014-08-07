@@ -1,5 +1,5 @@
-module RdocMdoc
-  class UnknownModule
+class RDoc::Generator::Mdoc
+  class UnknownClass
     def initialize(full_name)
       @full_name = full_name
     end

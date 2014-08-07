@@ -1,4 +1,4 @@
-module RdocMdoc
+class RDoc::Generator::Mdoc
   ##
   # A module of helpers when outputting mdoc formatted text
   module Helpers

@@ -1,9 +1,9 @@
-require "rdoc_mdoc/constant"
-require "rdoc_mdoc/comment"
-require "rdoc_mdoc/attribute"
-require "rdoc_mdoc/method"
+require "rdoc/generator/mdoc/constant"
+require "rdoc/generator/mdoc/comment"
+require "rdoc/generator/mdoc/attribute"
+require "rdoc/generator/mdoc/method"
 
-module RdocMdoc
+class RDoc::Generator::Mdoc
   class Section
     def self.method_types
       [:class, :instance]

@@ -1,9 +1,9 @@
 require "active_support/core_ext/string/filters"
-require "rdoc_mdoc/comment"
-require "rdoc_mdoc/section"
-require "rdoc_mdoc/unknown_module"
+require "rdoc/generator/mdoc/comment"
+require "rdoc/generator/mdoc/section"
+require "rdoc/generator/mdoc/unknown_module"
 
-module RdocMdoc
+class RDoc::Generator::Mdoc
   class Module
     attr_reader :mandb_section
 

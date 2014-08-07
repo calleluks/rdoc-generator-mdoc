@@ -1,6 +1,6 @@
-require "rdoc_mdoc/comment"
+require "rdoc/generator/mdoc/comment"
 
-module RdocMdoc
+class RDoc::Generator::Mdoc
   class Constant
     def initialize(rdoc_constant)
       @rdoc_constant = rdoc_constant

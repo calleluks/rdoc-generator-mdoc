@@ -1,5 +1,5 @@
-rdoc_mdoc
-=========
+rdoc-generator-mdoc
+===================
 
 An mdoc(7) generator for [RDoc](https://github.com/rdoc/rdoc).
 
@@ -8,14 +8,14 @@ Usage
 
 ### In Your Ruby Source Code
 
-Add `rdoc_mdoc` to your `Gemfile`:
+Add `rdoc-generator-mdoc` to your `Gemfile`:
 
-    gem "rdoc_mdoc"
+    gem "rdoc-generator-mdoc"
 
 Specify `mdoc` as the formatter using the `-f` option when calling
 `RDoc::RDoc#new`:
 
-    require "rdoc_mdoc"
+    require "rdoc/generator/mdoc"
 
     RDoc::RDoc.new.document "-f mdoc"
 

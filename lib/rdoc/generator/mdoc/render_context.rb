@@ -1,6 +1,6 @@
-require "rdoc_mdoc/helpers"
+require "rdoc/generator/mdoc/helpers"
 
-module RdocMdoc
+class RDoc::Generator::Mdoc
   class RenderContext
     include Helpers
 

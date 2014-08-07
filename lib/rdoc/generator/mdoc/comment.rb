@@ -1,7 +1,7 @@
 require "rdoc"
-require "rdoc_mdoc/formatter"
+require "rdoc/generator/mdoc/formatter"
 
-module RdocMdoc
+class RDoc::Generator::Mdoc
   class Comment
     def initialize(markup)
       @markup = markup
