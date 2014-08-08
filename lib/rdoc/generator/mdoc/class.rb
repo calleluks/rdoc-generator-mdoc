@@ -4,7 +4,9 @@ require "rdoc/generator/mdoc/module"
 class RDoc::Generator::Mdoc
   class Class < Module
     def superclass
-      if rdoc_class.superclass.is_a? String
+      if rdoc_class.superclass.nil?
+        UnknownClass.new("Object")
+      elsif rdoc_class.superclass.is_a? String
         UnknownClass.new(rdoc_class.superclass)
       else
         self.class.new(rdoc_class.superclass, mandb_section)
