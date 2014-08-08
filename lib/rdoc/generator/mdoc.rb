@@ -28,7 +28,7 @@ class RDoc::Generator::Mdoc
   def initialize(store, options)
     @store = store
     @mandb_section = options.mandb_section || "3-rdoc"
-    @output_directory = File.expand_path(File.join(options.op_dir, "man", "man#{mandb_section.split('-').first}"))
+    @output_directory = File.expand_path(File.join(options.op_dir, "man#{mandb_section.split('-').first}"))
     FileUtils.mkdir_p output_directory
   end
 
@@ -36,7 +36,7 @@ class RDoc::Generator::Mdoc
   # Generate man pages.
   #
   # Every class, module and method gets their own man page in the
-  # "man/manSECTION_PREFIX" subdirectory of the output directory.
+  # "manSECTION_PREFIX" subdirectory of the output directory.
   def generate
     generate_class_and_module_pages
     generate_method_pages
