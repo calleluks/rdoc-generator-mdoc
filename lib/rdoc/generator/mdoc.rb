@@ -81,7 +81,14 @@ class RDoc::Generator::Mdoc
   end
 
   def file_name(object)
-    File.join(output_directory, "#{object.full_name}.#{mandb_section}")
+    File.join(
+      output_directory,
+      "#{sanitize_file_name(object.full_name)}.#{mandb_section}",
+    )
+  end
+
+  def sanitize_file_name(string)
+    string.gsub("/", "\\")
   end
 
   def render_template(template, assigns)
