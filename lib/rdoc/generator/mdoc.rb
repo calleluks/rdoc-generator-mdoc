@@ -27,7 +27,9 @@ class RDoc::Generator::Mdoc
   # Create an instance usign the provided RDoc::Store and RDoc::Options.
   def initialize(store, options)
     @store = store
-    @mandb_section = options.mandb_section || "3-rdoc"
+    @mandb_section = sanitize_mandb_section(
+      options.mandb_section || "3-rdoc",
+    )
     @output_directory = File.expand_path(File.join(options.op_dir, "man#{mandb_section.split('-').first}"))
     FileUtils.mkdir_p output_directory
   end
@@ -89,6 +91,10 @@ class RDoc::Generator::Mdoc
 
   def sanitize_file_name(string)
     string.gsub("/", "\\")
+  end
+
+  def sanitize_mandb_section(string)
+    string.gsub(".", "-")
   end
 
   def render_template(template, assigns)
