@@ -3,8 +3,17 @@ require "rdoc/generator/mdoc/formatter"
 
 class RDoc::Generator::Mdoc
   class Comment
-    def initialize(markup)
-      @markup = markup
+    def initialize(comment)
+      case comment
+      when RDoc::Markup::Document
+        @rdoc_document = comment
+      when RDoc::Comment
+        @markup = comment.text
+      when String
+        @markup = comment
+      else
+        raise "Can't handle input of class: #{comment.class}"
+      end
     end
 
     def first_paragraph

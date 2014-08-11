@@ -25,7 +25,7 @@ class RDoc::Generator::Mdoc
     private
 
     def comment
-      @comment ||= Comment.new(rdoc_attribute.comment.text)
+      @comment ||= Comment.new(rdoc_attribute.comment)
     end
 
     attr_reader :rdoc_attribute

@@ -61,14 +61,15 @@ class RDoc::Generator::Mdoc
     private
 
     def comment
-      @comment ||= Comment.new(markup)
+      @comment ||= if rdoc_module.comment_location.is_a? RDoc::Markup::Document
+        Comment.new(rdoc_module.comment_location)
+      else
+        Comment.new(extract_markup(rdoc_module.comment_location))
+      end
     end
 
-    def markup
-      rdoc_module.
-        comment_location.
-        map { |rdoc_comment, _| rdoc_comment.text }.
-        join("\n")
+    def extract_markup(comment_location)
+      comment_location.map { |rdoc_comment, _| rdoc_comment.text }.join("\n")
     end
 
     def decorate_rdoc_mixins(rdoc_mixins)

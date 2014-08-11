@@ -109,7 +109,7 @@ class RDoc::Generator::Mdoc
     end
 
     def comment
-      @comment ||= Comment.new(rdoc_method.comment.text)
+      @comment ||= Comment.new(rdoc_method.comment)
     end
 
     def extract_invocation_examples(call_seq)

@@ -27,11 +27,7 @@ class RDoc::Generator::Mdoc
     attr_reader :rdoc_constant
 
     def comment
-      @comment ||= if rdoc_constant.comment.is_a? String
-        Comment.new(rdoc_constant.comment)
-      else
-        Comment.new(rdoc_constant.comment.text)
-      end
+      @comment ||= Comment.new(rdoc_constant.comment)
     end
   end
 end

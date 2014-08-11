@@ -66,12 +66,12 @@ class RDoc::Generator::Mdoc
     attr_reader :rdoc_section, :rdoc_constants, :rdoc_attributes,
       :mandb_section
 
-    def markup
-      rdoc_section.comments.map(&:normalize).map(&:text).join
-    end
-
     def comment
-      @comment ||= Comment.new(markup)
+      @comment ||= if rdoc_section.comments.is_a? RDoc::Markup::Document
+        Comment.new(rdoc_section.comments)
+      else
+        Comment.new(rdoc_section.comments.map(&:normalize).map(&:text).join)
+      end
     end
   end
 end
