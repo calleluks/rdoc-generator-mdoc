@@ -21,13 +21,13 @@ class RDoc::Generator::Mdoc
     # > Typical syntax is shown in the first content macro displayed below,
     # > ‘.Ad’.
     def escape(string)
-      string.gsub(%r|[+\-/*%<>=&`'"]|, '\\\&\0')
+      string.to_s.gsub(%r|[+\-/*%<>=&`'"]|, '\\\&\0')
     end
 
     ##
     # Returns a new string enclosed in double quotes.
     def quote(string)
-      string.gsub(/^|$/, '"')
+      string.to_s.gsub(/^|$/, '"')
     end
   end
 end
