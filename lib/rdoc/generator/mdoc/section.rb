@@ -61,8 +61,10 @@ class RDoc::Generator::Mdoc
         parent.
         methods_by_type(rdoc_section)[type.to_s].
         flat_map do |visibility, rdoc_methods|
-          rdoc_methods.map do
-            |rdoc_method| Method.new(rdoc_method, mandb_section, visibility)
+          rdoc_methods.select do |rdoc_method|
+            rdoc_method.is_a? RDoc::AnyMethod
+          end.map do |rdoc_method|
+            Method.new(rdoc_method, mandb_section, visibility)
           end
         end
     end
