@@ -1,6 +1,5 @@
 require "erb"
 require "rdoc"
-require "rdoc/generator/mdoc/version"
 require "rdoc/generator/mdoc/class"
 require "rdoc/generator/mdoc/module"
 require "rdoc/generator/mdoc/render_context"
