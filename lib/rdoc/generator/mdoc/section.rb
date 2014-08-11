@@ -9,11 +9,18 @@ class RDoc::Generator::Mdoc
       [:class, :instance]
     end
 
-    def initialize(rdoc_section, rdoc_constants, rdoc_attributes, mandb_section)
+    def initialize(
+      rdoc_section,
+      rdoc_constants,
+      rdoc_attributes,
+      mandb_section,
+      parent
+    )
       @rdoc_section = rdoc_section
       @rdoc_constants = rdoc_constants
       @rdoc_attributes = rdoc_attributes
       @mandb_section = mandb_section
+      @parent = parent
     end
 
     def titled?
@@ -51,7 +58,6 @@ class RDoc::Generator::Mdoc
     def methods_of_type(type)
       @methods_of_type ||= {}
       @methods_of_type[type] ||=
-        rdoc_section.
         parent.
         methods_by_type(rdoc_section)[type.to_s].
         flat_map do |visibility, rdoc_methods|
@@ -64,7 +70,7 @@ class RDoc::Generator::Mdoc
     private
 
     attr_reader :rdoc_section, :rdoc_constants, :rdoc_attributes,
-      :mandb_section
+      :mandb_section, :parent
 
     def comment
       @comment ||= if rdoc_section.comments.is_a? RDoc::Markup::Document

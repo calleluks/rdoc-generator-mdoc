@@ -54,8 +54,13 @@ class RDoc::Generator::Mdoc
             rdoc_constants,
             rdoc_attributes,
             mandb_section,
+            self,
           )
         end
+    end
+
+    def methods_by_type(section)
+      rdoc_module.methods_by_type(section)
     end
 
     private
