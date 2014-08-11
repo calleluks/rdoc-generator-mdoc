@@ -66,7 +66,7 @@ class RDoc::Generator::Mdoc
 
     def source
       @source ||= rdoc_method.token_stream &&
-        strip_source_file_path(rdoc_method.tokens_to_s)
+        strip_source_file_path(extract_source(rdoc_method.token_stream))
     end
 
     def alias?
@@ -124,6 +124,10 @@ class RDoc::Generator::Mdoc
 
     def strip_source_file_path(source)
       source.lines[1..-1].join
+    end
+
+    def extract_source(token_stream)
+      token_stream.compact.map { |t| t.text }.join('')
     end
   end
 end
