@@ -24,7 +24,7 @@ class RDoc::Generator::Mdoc
     end
 
     def parameters
-      rdoc_method.params.gsub(/[\(\)]/, '').split(", ")
+      rdoc_method.params.to_s.gsub(/[\(\)]/, '').split(", ")
     end
 
     def short_description
