@@ -43,9 +43,9 @@ Not documented.
 <% end %>
 <% unless section.constants.empty? %>
 .Ss Constants
-.Bl -tag
+\&
 <% section.constants.each do |constant| %>
-.It Dv <%= constant.name %> Li = <%= escape constant.value %>
+.Ss Dv <%= constant.name %> Li = <%= escape constant.value %>
 <% if constant.described? %>
 <%= constant.description %>
 <% else %>
@@ -53,13 +53,12 @@ Not documented.
 .Pp
 <% end %>
 <% end %>
-.El
 <% end %>
 <% unless section.attributes.empty? %>
 .Ss Attributes
-.Bl -tag
+\&
 <% section.attributes.each do |attribute| %>
-.It Va <%= attribute.name %> Pq <%= attribute.rw %>
+.Ss Va <%= attribute.name %> Pq <%= attribute.rw %>
 <% if attribute.described? %>
 <%= attribute.description %>
 <% else %>
@@ -67,14 +66,13 @@ Not documented.
 .Pp
 <% end %>
 <% end %>
-.El
 <% end %>
 <% section.class.method_types.each do |type| %>
 <% unless section.methods_of_type(type).empty? %>
 .Ss <%= type.capitalize %> Methods
-.Bl -tag
+\&
 <% section.methods_of_type(type).each do |method| %>
-.It Fn "<%= escape method.visibility %> <%= escape method.name %>" <%=
+.Ss Fn "<%= escape method.visibility %> <%= escape method.name %>" <%=
 method.parameters.map { |p| quote(escape(p)) }.join(" ") %>
 <% if method.has_invocation_examples? %>
 .Bd -literal
@@ -108,7 +106,6 @@ Also aliased as:
 .El
 <% end %>
 <% end %>
-.El
 <% end %>
 <% end %>
 <% end %>
