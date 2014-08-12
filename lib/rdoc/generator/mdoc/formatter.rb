@@ -28,9 +28,15 @@ class RDoc::Generator::Mdoc
     end
 
     ##
-    # Turn a heading into a subsection header.
+    # Turn a heading into a paragraph or a subsection header depending on
+    # wether we are currently processing a list or not. List items can't
+    # contain subsection headers.
     def accept_heading(heading)
-      parts << ".Ss #{heading.text}\n"
+      if in_list?
+        accept_paragraph(heading)
+      else
+        parts << ".Ss #{heading.text}\n"
+      end
     end
 
     ##
@@ -146,6 +152,10 @@ class RDoc::Generator::Mdoc
 
     def current_list_type
       list_types.last
+    end
+
+    def in_list?
+      !list_types.empty?
     end
 
     def convert_string(string)
