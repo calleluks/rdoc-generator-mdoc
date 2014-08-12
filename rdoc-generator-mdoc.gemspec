@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = "rdoc-generator-mdoc"
-  spec.version = "0.0.3"
+  spec.version = "0.0.4"
   spec.authors = ["Calle Erlandsson", "Mike Burns"]
   spec.email = ["calle@thoughtbot.com", "hello@thoughtbot.com"]
   spec.summary = "An mdoc(7) generator for RDoc"
